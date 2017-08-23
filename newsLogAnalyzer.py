@@ -8,7 +8,6 @@ __author__ = "Jon Cronin"
 
 DBNAME = "news"
 
-
 def connectAndQuery(someSqlQuery):
     """
     Connect to the news database and make a query on behalf of the
@@ -19,12 +18,14 @@ def connectAndQuery(someSqlQuery):
     the DB
     """
     # print("executing someSqlQuery")
-    dbConnection = psycopg2.connect(database=DBNAME)
-    dbCursor = dbConnection.cursor()
-    dbCursor.execute(someSqlQuery)
-    output = dbCursor.fetchall()
-    dbConnection.close()
-    return output
+    try:
+        dbConnection = psycopg2.connect(database=DBNAME)
+        dbCursor.execute(someSqlQuery)
+        output = dbCursor.fetchall()
+        dbConnection.close()
+        return output
+    except psycopg2.Error as e:
+        sys.exit("ERROR - Unable to connect or query the DB")
 
 
 def queryPopArticles():
@@ -118,5 +119,5 @@ def cli_prompt():
         else:
             print("You've entered an invalid command - please try again")
 
-
-cli_prompt()
+if __name__ == '__main__':
+    cli_prompt()
